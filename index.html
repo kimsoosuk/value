@@ -1,375 +1,1421 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>김수석의 생각 뒤집기</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
-<style>
-/* ===== Reset & Base ===== */
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-text-size-adjust:100%;font-size:16px}
-body{font-family:'Noto Sans KR',sans-serif;background:#f1f5f9;color:#1e293b;line-height:1.6;min-height:100dvh;overflow-x:hidden}
-button{cursor:pointer;font-family:inherit;border:none;background:none}
-textarea{font-family:inherit;border:none;outline:none}
-img{display:block;max-width:100%}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>김수석의 생각 뒤집기</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+  <style>
+    /* ===== Reset & Base ===== */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
 
-/* ===== Utility ===== */
-.hidden{display:none!important}
-.fade-in{animation:fadeIn .4s ease}
-.slide-up{animation:slideUp .45s ease}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-@keyframes spin{to{transform:rotate(360deg)}}
+    html {
+      -webkit-text-size-adjust: 100%;
+      font-size: 16px
+    }
 
-/* ===== Step 0: 홈 ===== */
-.home{min-height:100dvh;display:flex;flex-direction:column;background:#f8fafc}
-.home-header{padding:2rem 1.5rem 1.5rem;text-align:center;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.04);position:relative;z-index:10}
-.home-header .logo{display:flex;align-items:center;justify-content:center;gap:.6rem;margin-bottom:.5rem}
-.home-header .logo img{width:48px;height:48px;border-radius:50%;object-fit:cover;box-shadow:0 2px 8px rgba(0,0,0,.08);border:2px solid #f1f5f9}
-.home-header h1{font-size:1.5rem;font-weight:800;color:#0f172a;letter-spacing:-.02em}
-.home-header .subtitle{color:#64748b;font-size:.85rem;font-weight:500;margin-bottom:1.5rem;line-height:1.5}
-.mode-cards{display:flex;gap:1rem;max-width:40rem;margin:0 auto;width:100%}
-.mode-card{flex:1;padding:1.25rem;border-radius:1rem;border:2px solid #e2e8f0;background:#fff;text-align:left;transition:all .25s;position:relative;overflow:hidden}
-.mode-card:hover{box-shadow:0 8px 24px rgba(0,0,0,.06)}
-.mode-card.active-low{background:#eff6ff;border-color:#3b82f6;box-shadow:0 0 0 1px #3b82f6}
-.mode-card.active-high{background:#f0fdf4;border-color:#22c55e;box-shadow:0 0 0 1px #22c55e}
-.mode-card .icon-wrap{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:.75rem;background:#f1f5f9;color:#64748b;transition:all .25s}
-.mode-card.active-low .icon-wrap{background:#3b82f6;color:#fff}
-.mode-card.active-high .icon-wrap{background:#22c55e;color:#fff}
-.mode-card h3{font-size:1.05rem;font-weight:700;margin-bottom:.35rem;color:#1e293b}
-.mode-card.active-low h3{color:#1d4ed8}
-.mode-card.active-high h3{color:#15803d}
-.mode-card p{font-size:.78rem;color:#64748b;line-height:1.55}
-.mode-card.active-low p{color:#3b82f6}
-.mode-card.active-high p{color:#16a34a}
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #f1f5f9;
+      color: #1e293b;
+      line-height: 1.6;
+      min-height: 100dvh;
+      overflow-x: hidden
+    }
 
-/* Value Grid */
-.value-area{flex:1;overflow-y:auto;transition:all .4s;padding:0}
-.value-area.collapsed{max-height:0;opacity:0;overflow:hidden}
-.value-area-inner{max-width:72rem;margin:0 auto;padding:1.5rem 1rem 4rem}
-.cat-filters{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:1.5rem;position:sticky;top:0;background:#f8fafc;padding:.75rem 0;z-index:5}
-.cat-btn{padding:.55rem 1rem;border-radius:2rem;font-size:.8rem;font-weight:600;background:#fff;color:#64748b;border:1px solid #e2e8f0;transition:all .2s;box-shadow:0 1px 2px rgba(0,0,0,.03)}
-.cat-btn.active{background:#1e293b;color:#fff;border-color:#1e293b}
-.value-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem}
-@media(min-width:640px){.value-grid{grid-template-columns:repeat(3,1fr);gap:1rem}}
-@media(min-width:1024px){.value-grid{grid-template-columns:repeat(4,1fr)}}
-.value-card{background:#fff;padding:1.25rem;border-radius:1rem;border:1px solid #e2e8f0;text-align:left;transition:all .2s;position:relative;overflow:hidden;display:flex;flex-direction:column}
-.value-card:hover{box-shadow:0 6px 20px rgba(0,0,0,.06);border-color:#93c5fd}
-.value-card:active{transform:scale(.97)}
-.value-card .bar{position:absolute;top:0;left:0;width:4px;height:100%;border-radius:0 4px 4px 0}
-.value-card .cat-label{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:.15rem .5rem;border-radius:.35rem;display:inline-block;margin-bottom:.5rem;width:fit-content}
-.value-card h3{font-size:1.1rem;font-weight:700;color:#1e293b;margin-bottom:.75rem;flex:1}
-.value-card .tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:auto}
-.value-card .tag{font-size:.65rem;color:#64748b;background:#f1f5f9;padding:.2rem .5rem;border-radius:.35rem;font-weight:500}
-/* Category colors */
-.cat-thinking{background:#eff6ff;color:#2563eb;border-color:#bfdbfe}.bar-thinking{background:#3b82f6}
-.cat-emotional{background:#fef2f2;color:#dc2626;border-color:#fecaca}.bar-emotional{background:#ef4444}
-.cat-social{background:#f5f3ff;color:#7c3aed;border-color:#ddd6fe}.bar-social{background:#8b5cf6}
-.cat-harmonious{background:#f0fdf4;color:#16a34a;border-color:#bbf7d0}.bar-harmonious{background:#22c55e}
+    button {
+      cursor: pointer;
+      font-family: inherit;
+      border: none;
+      background: none
+    }
 
-/* ===== App Shell (Step 1~6) ===== */
-.app-shell{position:fixed;inset:0;background:#f1f5f9;display:flex;flex-direction:column;align-items:center;justify-content:center}
-@media(min-width:640px){.app-shell{padding:1.5rem}}
-.app-container{width:100%;max-width:32rem;background:#fff;display:flex;flex-direction:column;height:100%;overflow:hidden;box-shadow:0 25px 50px rgba(0,0,0,.1)}
-@media(min-width:640px){.app-container{border-radius:1.5rem;height:85vh}}
-.app-header{background:rgba(255,255,255,.92);backdrop-filter:blur(12px);padding:1rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f1f5f9;flex-shrink:0;z-index:20}
-.app-header .back-btn{padding:.5rem;margin-left:-.5rem;border-radius:50%;color:#94a3b8;transition:background .15s}
-.app-header .back-btn:hover{background:#f1f5f9}
-.app-header .profile{display:flex;align-items:center;gap:.6rem}
-.app-header .profile img{width:40px;height:40px;border-radius:50%;object-fit:cover;box-shadow:0 2px 6px rgba(0,0,0,.08);border:1px solid #f1f5f9}
-.app-header .profile h2{font-size:.95rem;font-weight:700;color:#1e293b}
-.app-header .profile .status{display:flex;align-items:center;gap:.4rem;font-size:.7rem;color:#64748b;font-weight:500}
-.app-header .profile .dot{width:7px;height:7px;border-radius:50%}
-.dot-low{background:#3b82f6}.dot-high{background:#22c55e}
+    textarea {
+      font-family: inherit;
+      border: none;
+      outline: none
+    }
 
-/* ===== Step 1, 5: 입력 카드 ===== */
-.input-step{flex:1;overflow-y:auto;padding:1.5rem;display:flex;align-items:center;justify-content:center;background:#f8fafc}
-.input-card{background:#fff;padding:1.5rem;border-radius:1rem;box-shadow:0 2px 8px rgba(0,0,0,.04);border:1px solid #e2e8f0;max-width:24rem;width:100%}
-.input-card .icon-circle{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:1rem}
-.input-card h2{font-size:1.2rem;font-weight:700;color:#1e293b;margin-bottom:.5rem}
-.input-card h2 .hl{color:#2563eb}
-.input-card .desc{font-size:.82rem;color:#64748b;line-height:1.6;margin-bottom:1.25rem}
-.input-card textarea{width:100%;height:8rem;padding:1rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:.75rem;resize:none;font-size:.9rem;color:#334155;transition:border .2s,box-shadow .2s}
-.input-card textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12)}
-.submit-btn{width:100%;margin-top:1rem;padding:.9rem;border-radius:.75rem;font-size:.9rem;font-weight:700;color:#fff;background:#1e293b;display:flex;align-items:center;justify-content:center;gap:.4rem;transition:background .2s}
-.submit-btn:hover:not(:disabled){background:#334155}
-.submit-btn:disabled{background:#cbd5e1;cursor:not-allowed}
+    img {
+      display: block;
+      max-width: 100%
+    }
 
-/* ===== Step 2: 공식 정의 ===== */
-.define-step{flex:1;overflow-y:auto;padding:1.5rem;background:#f8fafc;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.define-step .hint{font-size:.82rem;font-weight:600;color:#64748b;text-align:center;margin-bottom:1.5rem}
-.sentence-card{background:#fff;padding:1.25rem;border-radius:1rem;box-shadow:0 2px 6px rgba(0,0,0,.03);border:1px solid #e2e8f0;margin-bottom:.75rem;max-width:28rem;width:100%}
-.sentence-card p{color:#1e293b;font-weight:500;line-height:1.7}
-.next-btn{margin-top:1.5rem;padding:.75rem 1.5rem;border-radius:2rem;font-size:.85rem;font-weight:700;background:#dbeafe;color:#1d4ed8;display:flex;align-items:center;gap:.4rem;transition:background .2s;box-shadow:0 1px 4px rgba(0,0,0,.04)}
-.next-btn:hover{background:#bfdbfe}
+    /* ===== Utility ===== */
+    .hidden {
+      display: none !important
+    }
 
-/* ===== Step 3: 3가지 질문 ===== */
-.questions-step{flex:1;overflow-y:auto;padding:1.5rem;background:#f8fafc}
-.questions-step h2{font-size:1.05rem;font-weight:700;color:#1e293b;margin-bottom:1.25rem;display:flex;align-items:center;gap:.5rem}
-.questions-step h2 .badge{width:24px;height:24px;border-radius:50%;background:#1e293b;color:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700}
-.q-card{background:#fff;padding:1.25rem;border-radius:1rem;box-shadow:0 2px 6px rgba(0,0,0,.03);border:1px solid #e2e8f0;margin-bottom:1rem}
-.q-card p{font-size:.82rem;font-weight:600;color:#334155;margin-bottom:.75rem;word-break:keep-all}
-.q-card textarea{width:100%;height:5rem;padding:.75rem;background:#f8fafc;border:1px solid #e2e8f0;border-radius:.5rem;resize:none;font-size:.85rem;color:#334155;transition:border .2s}
-.q-card textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 2px rgba(59,130,246,.1)}
-.q-submit{padding:2rem 0}
+    .fade-in {
+      animation: fadeIn .4s ease
+    }
 
-/* ===== Step 4: 채팅 ===== */
-.chat-body{flex:1;overflow-y:auto;padding:1rem;background:#f8fafc;display:flex;flex-direction:column;gap:1rem}
-.chat-badge{display:flex;justify-content:center;padding:1rem 0}
-.chat-badge-inner{background:#fff;border:1px solid #e2e8f0;border-radius:1rem;padding:.5rem 1.5rem;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.03)}
-.chat-badge-inner .mode-label{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
-.chat-badge-inner h3{font-size:1.05rem;font-weight:700;color:#1e293b}
-.msg-row{display:flex;max-width:100%}
-.msg-row.user{justify-content:flex-end}
-.msg-row.model{justify-content:flex-start}
-.msg-row .avatar{width:32px;height:32px;border-radius:50%;margin-right:.5rem;margin-top:4px;flex-shrink:0;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.06);object-fit:cover}
-.msg-bubble{max-width:80%;padding:.75rem 1rem;border-radius:1.25rem;font-size:.9rem;line-height:1.65;word-break:break-word;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.msg-row.user .msg-bubble{background:#2563eb;color:#fff;border-bottom-right-radius:4px}
-.msg-row.model .msg-bubble{background:#fff;color:#334155;border:1px solid #f1f5f9;border-top-left-radius:4px}
-.typing-dots{display:flex;gap:4px;align-items:center;padding:4px 0}
-.typing-dots span{width:6px;height:6px;background:#94a3b8;border-radius:50%;animation:bounce .6s infinite}
-.typing-dots span:nth-child(2){animation-delay:.1s}
-.typing-dots span:nth-child(3){animation-delay:.2s}
-.finish-chat-btn{align-self:center;margin:1.5rem 0;padding:.85rem 2rem;border-radius:2rem;font-size:.9rem;font-weight:700;background:#1e293b;color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.1);display:flex;align-items:center;gap:.4rem;transition:all .2s}
-.finish-chat-btn:hover{background:#334155;transform:scale(1.02)}
+    .slide-up {
+      animation: slideUp .45s ease
+    }
 
-/* Chat input bar */
-.chat-input-bar{padding:.75rem;background:#fff;border-top:1px solid #f1f5f9;z-index:20;flex-shrink:0}
-.chat-progress{display:flex;justify-content:space-between;align-items:center;padding:0 .5rem .35rem;font-size:.7rem;font-weight:500}
-.chat-progress .label{color:#94a3b8}
-.chat-progress .count{color:#3b82f6;font-weight:700}
-.chat-progress .count.full{color:#ef4444}
-.chat-input-wrap{display:flex;align-items:flex-end;gap:.5rem;background:#f8fafc;padding:.35rem;border-radius:1.5rem;border:1px solid #e2e8f0;transition:box-shadow .2s}
-.chat-input-wrap:focus-within{box-shadow:0 0 0 2px rgba(59,130,246,.1)}
-.chat-input-wrap textarea{flex:1;background:transparent;border:none;resize:none;padding:.65rem 1rem;min-height:44px;max-height:128px;font-size:.9rem;color:#1e293b;line-height:1.5}
-.chat-input-wrap textarea::placeholder{color:#94a3b8}
-.chat-input-wrap textarea:disabled{opacity:.5}
-.send-btn{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;background:#2563eb;flex-shrink:0;transition:background .15s;box-shadow:0 2px 6px rgba(37,99,235,.25)}
-.send-btn:hover:not(:disabled){background:#1d4ed8}
-.send-btn:disabled{background:#cbd5e1;box-shadow:none}
-.send-btn svg.spin{animation:spin .8s linear infinite}
+    @keyframes fadeIn {
+      from {
+        opacity: 0
+      }
 
-/* ===== Step 6: 총평 ===== */
-.summary-step{flex:1;overflow-y:auto;padding:1rem 1rem 6rem;background:#f1f5f9}
-.summary-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;padding:0 .25rem}
-.summary-nav .back-btn2{color:#94a3b8;background:none;padding:.25rem;transition:color .15s}
-.summary-nav .back-btn2:hover{color:#1e293b}
-.summary-nav .reset-btn{font-size:.8rem;font-weight:700;color:#64748b;background:#fff;padding:.5rem 1rem;border-radius:2rem;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:color .15s}
-.summary-nav .reset-btn:hover{color:#1e293b}
-.summary-card{background:#fff;padding:1.5rem;border-radius:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,.04);border:1px solid #e2e8f0;position:relative;overflow:hidden}
-.summary-card .deco-tr{position:absolute;top:0;right:0;width:8rem;height:8rem;background:#eff6ff;border-bottom-left-radius:100%;opacity:.5}
-.summary-card .deco-bl{position:absolute;bottom:0;left:0;width:6rem;height:6rem;background:#f0fdf4;border-top-right-radius:100%;opacity:.5}
-.summary-card .header{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid #f1f5f9;position:relative}
-.summary-card .header img{width:48px;height:48px;border-radius:50%;border:2px solid #f1f5f9;box-shadow:0 2px 6px rgba(0,0,0,.06);object-fit:cover}
-.summary-card .header .label{font-size:.75rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em}
-.summary-card .header .title{font-size:1.05rem;font-weight:800;color:#1e293b}
-.summary-card .header .title .hl{color:#2563eb}
-.summary-body{position:relative;font-size:.9rem;line-height:1.8;color:#334155}
-.summary-body h3{font-size:1.15rem;font-weight:700;color:#1e4ed8;margin:1.25rem 0 .5rem}
-.summary-body strong{font-weight:700;color:#1e293b}
-.summary-card .footer{margin-top:1.5rem;padding-top:1rem;border-top:1px solid #f1f5f9;display:flex;align-items:center;justify-content:center;gap:.4rem;color:#94a3b8;font-size:.7rem;font-weight:500}
-.download-btn{margin:1.5rem auto 0;display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.9rem 0;border-radius:.75rem;font-size:.9rem;font-weight:700;background:#1e293b;color:#fff;max-width:20rem;width:100%;box-shadow:0 4px 12px rgba(0,0,0,.1);transition:background .2s}
-.download-btn:hover{background:#334155}
+      to {
+        opacity: 1
+      }
+    }
 
-/* ===== Loading spinner ===== */
-.loading-screen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;background:#f8fafc}
-.loading-screen .spinner{width:40px;height:40px;border:3px solid #e2e8f0;border-top-color:#3b82f6;border-radius:50%;animation:spin .8s linear infinite}
-.loading-screen p{color:#64748b;font-weight:500;animation:pulse 1.5s infinite}
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px)
+      }
 
-/* ===== SVG icons inline ===== */
-.icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle}
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
 
-/* ===== Mobile ===== */
-@media(max-width:480px){
-  .mode-cards{flex-direction:column}
-  .home-header h1{font-size:1.3rem}
-}
-</style>
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(-4px)
+      }
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .5
+      }
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    /* ===== Step 0: 홈 ===== */
+    .home {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      background: #f8fafc
+    }
+
+    .home-header {
+      padding: 2rem 1.5rem 1.5rem;
+      text-align: center;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, .04);
+      position: relative;
+      z-index: 10
+    }
+
+    .home-header .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .6rem;
+      margin-bottom: .5rem
+    }
+
+    .home-header .logo img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+      border: 2px solid #f1f5f9
+    }
+
+    .home-header h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -.02em
+    }
+
+    .home-header .subtitle {
+      color: #64748b;
+      font-size: .85rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      line-height: 1.5
+    }
+
+    .mode-cards {
+      display: flex;
+      gap: 1rem;
+      max-width: 40rem;
+      margin: 0 auto;
+      width: 100%
+    }
+
+    .mode-card {
+      flex: 1;
+      padding: 1.25rem;
+      border-radius: 1rem;
+      border: 2px solid #e2e8f0;
+      background: #fff;
+      text-align: left;
+      transition: all .25s;
+      position: relative;
+      overflow: hidden
+    }
+
+    .mode-card:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .06)
+    }
+
+    .mode-card.active-low {
+      background: #eff6ff;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 1px #3b82f6
+    }
+
+    .mode-card.active-high {
+      background: #f0fdf4;
+      border-color: #22c55e;
+      box-shadow: 0 0 0 1px #22c55e
+    }
+
+    .mode-card .icon-wrap {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: .75rem;
+      background: #f1f5f9;
+      color: #64748b;
+      transition: all .25s
+    }
+
+    .mode-card.active-low .icon-wrap {
+      background: #3b82f6;
+      color: #fff
+    }
+
+    .mode-card.active-high .icon-wrap {
+      background: #22c55e;
+      color: #fff
+    }
+
+    .mode-card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: .35rem;
+      color: #1e293b
+    }
+
+    .mode-card.active-low h3 {
+      color: #1d4ed8
+    }
+
+    .mode-card.active-high h3 {
+      color: #15803d
+    }
+
+    .mode-card p {
+      font-size: .78rem;
+      color: #64748b;
+      line-height: 1.55
+    }
+
+    .mode-card.active-low p {
+      color: #3b82f6
+    }
+
+    .mode-card.active-high p {
+      color: #16a34a
+    }
+
+    /* Value Grid */
+    .value-area {
+      flex: 1;
+      overflow-y: auto;
+      transition: all .4s;
+      padding: 0
+    }
+
+    .value-area.collapsed {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden
+    }
+
+    .value-area-inner {
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 4rem
+    }
+
+    .cat-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      position: sticky;
+      top: 0;
+      background: #f8fafc;
+      padding: .75rem 0;
+      z-index: 5
+    }
+
+    .cat-btn {
+      padding: .55rem 1rem;
+      border-radius: 2rem;
+      font-size: .8rem;
+      font-weight: 600;
+      background: #fff;
+      color: #64748b;
+      border: 1px solid #e2e8f0;
+      transition: all .2s;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .03)
+    }
+
+    .cat-btn.active {
+      background: #1e293b;
+      color: #fff;
+      border-color: #1e293b
+    }
+
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: .75rem
+    }
+
+    @media(min-width:640px) {
+      .value-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem
+      }
+    }
+
+    @media(min-width:1024px) {
+      .value-grid {
+        grid-template-columns: repeat(4, 1fr)
+      }
+    }
+
+    .value-card {
+      background: #fff;
+      padding: 1.25rem;
+      border-radius: 1rem;
+      border: 1px solid #e2e8f0;
+      text-align: left;
+      transition: all .2s;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column
+    }
+
+    .value-card:hover {
+      box-shadow: 0 6px 20px rgba(0, 0, 0, .06);
+      border-color: #93c5fd
+    }
+
+    .value-card:active {
+      transform: scale(.97)
+    }
+
+    .value-card .bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      border-radius: 0 4px 4px 0
+    }
+
+    .value-card .cat-label {
+      font-size: .6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      padding: .15rem .5rem;
+      border-radius: .35rem;
+      display: inline-block;
+      margin-bottom: .5rem;
+      width: fit-content
+    }
+
+    .value-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: .75rem;
+      flex: 1
+    }
+
+    .value-card .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .35rem;
+      margin-top: auto
+    }
+
+    .value-card .tag {
+      font-size: .65rem;
+      color: #64748b;
+      background: #f1f5f9;
+      padding: .2rem .5rem;
+      border-radius: .35rem;
+      font-weight: 500
+    }
+
+    /* Category colors */
+    .cat-thinking {
+      background: #eff6ff;
+      color: #2563eb;
+      border-color: #bfdbfe
+    }
+
+    .bar-thinking {
+      background: #3b82f6
+    }
+
+    .cat-emotional {
+      background: #fef2f2;
+      color: #dc2626;
+      border-color: #fecaca
+    }
+
+    .bar-emotional {
+      background: #ef4444
+    }
+
+    .cat-social {
+      background: #f5f3ff;
+      color: #7c3aed;
+      border-color: #ddd6fe
+    }
+
+    .bar-social {
+      background: #8b5cf6
+    }
+
+    .cat-harmonious {
+      background: #f0fdf4;
+      color: #16a34a;
+      border-color: #bbf7d0
+    }
+
+    .bar-harmonious {
+      background: #22c55e
+    }
+
+    /* ===== App Shell (Step 1~6) ===== */
+    .app-shell {
+      position: fixed;
+      inset: 0;
+      background: #f1f5f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center
+    }
+
+    @media(min-width:640px) {
+      .app-shell {
+        padding: 1.5rem
+      }
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 32rem;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, .1)
+    }
+
+    @media(min-width:640px) {
+      .app-container {
+        border-radius: 1.5rem;
+        height: 85vh
+      }
+    }
+
+    .app-header {
+      background: rgba(255, 255, 255, .92);
+      backdrop-filter: blur(12px);
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #f1f5f9;
+      flex-shrink: 0;
+      z-index: 20
+    }
+
+    .app-header .back-btn {
+      padding: .5rem;
+      margin-left: -.5rem;
+      border-radius: 50%;
+      color: #94a3b8;
+      transition: background .15s
+    }
+
+    .app-header .back-btn:hover {
+      background: #f1f5f9
+    }
+
+    .app-header .profile {
+      display: flex;
+      align-items: center;
+      gap: .6rem
+    }
+
+    .app-header .profile img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, .08);
+      border: 1px solid #f1f5f9
+    }
+
+    .app-header .profile h2 {
+      font-size: .95rem;
+      font-weight: 700;
+      color: #1e293b
+    }
+
+    .app-header .profile .status {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      font-size: .7rem;
+      color: #64748b;
+      font-weight: 500
+    }
+
+    .app-header .profile .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%
+    }
+
+    .dot-low {
+      background: #3b82f6
+    }
+
+    .dot-high {
+      background: #22c55e
+    }
+
+    /* ===== Step 1, 5: 입력 카드 ===== */
+    .input-step {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f8fafc
+    }
+
+    .input-card {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .04);
+      border: 1px solid #e2e8f0;
+      max-width: 24rem;
+      width: 100%
+    }
+
+    .input-card .icon-circle {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem
+    }
+
+    .input-card h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: .5rem
+    }
+
+    .input-card h2 .hl {
+      color: #2563eb
+    }
+
+    .input-card .desc {
+      font-size: .82rem;
+      color: #64748b;
+      line-height: 1.6;
+      margin-bottom: 1.25rem
+    }
+
+    .input-card textarea {
+      width: 100%;
+      height: 8rem;
+      padding: 1rem;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: .75rem;
+      resize: none;
+      font-size: .9rem;
+      color: #334155;
+      transition: border .2s, box-shadow .2s
+    }
+
+    .input-card textarea:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, .12)
+    }
+
+    .submit-btn {
+      width: 100%;
+      margin-top: 1rem;
+      padding: .9rem;
+      border-radius: .75rem;
+      font-size: .9rem;
+      font-weight: 700;
+      color: #fff;
+      background: #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .4rem;
+      transition: background .2s
+    }
+
+    .submit-btn:hover:not(:disabled) {
+      background: #334155
+    }
+
+    .submit-btn:disabled {
+      background: #cbd5e1;
+      cursor: not-allowed
+    }
+
+    /* ===== Step 2: 공식 정의 ===== */
+    .define-step {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+      background: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center
+    }
+
+    .define-step .hint {
+      font-size: .82rem;
+      font-weight: 600;
+      color: #64748b;
+      text-align: center;
+      margin-bottom: 1.5rem
+    }
+
+    .sentence-card {
+      background: #fff;
+      padding: 1.25rem;
+      border-radius: 1rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, .03);
+      border: 1px solid #e2e8f0;
+      margin-bottom: .75rem;
+      max-width: 28rem;
+      width: 100%
+    }
+
+    .sentence-card p {
+      color: #1e293b;
+      font-weight: 500;
+      line-height: 1.7
+    }
+
+    .next-btn {
+      margin-top: 1.5rem;
+      padding: .75rem 1.5rem;
+      border-radius: 2rem;
+      font-size: .85rem;
+      font-weight: 700;
+      background: #dbeafe;
+      color: #1d4ed8;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      transition: background .2s;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, .04)
+    }
+
+    .next-btn:hover {
+      background: #bfdbfe
+    }
+
+    /* ===== Step 3: 3가지 질문 ===== */
+    .questions-step {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+      background: #f8fafc
+    }
+
+    .questions-step h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem
+    }
+
+    .questions-step h2 .badge {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #1e293b;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .7rem;
+      font-weight: 700
+    }
+
+    .q-card {
+      background: #fff;
+      padding: 1.25rem;
+      border-radius: 1rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, .03);
+      border: 1px solid #e2e8f0;
+      margin-bottom: 1rem
+    }
+
+    .q-card p {
+      font-size: .82rem;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: .75rem;
+      word-break: keep-all
+    }
+
+    .q-card textarea {
+      width: 100%;
+      height: 5rem;
+      padding: .75rem;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: .5rem;
+      resize: none;
+      font-size: .85rem;
+      color: #334155;
+      transition: border .2s
+    }
+
+    .q-card textarea:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, .1)
+    }
+
+    .q-submit {
+      padding: 2rem 0
+    }
+
+    /* ===== Step 4: 채팅 ===== */
+    .chat-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      background: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem
+    }
+
+    .chat-badge {
+      display: flex;
+      justify-content: center;
+      padding: 1rem 0
+    }
+
+    .chat-badge-inner {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 1rem;
+      padding: .5rem 1.5rem;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, .03)
+    }
+
+    .chat-badge-inner .mode-label {
+      font-size: .6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em
+    }
+
+    .chat-badge-inner h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #1e293b
+    }
+
+    .msg-row {
+      display: flex;
+      max-width: 100%
+    }
+
+    .msg-row.user {
+      justify-content: flex-end
+    }
+
+    .msg-row.model {
+      justify-content: flex-start
+    }
+
+    .msg-row .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      margin-right: .5rem;
+      margin-top: 4px;
+      flex-shrink: 0;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, .06);
+      object-fit: cover
+    }
+
+    .msg-bubble {
+      max-width: 80%;
+      padding: .75rem 1rem;
+      border-radius: 1.25rem;
+      font-size: .9rem;
+      line-height: 1.65;
+      word-break: break-word;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, .04)
+    }
+
+    .msg-row.user .msg-bubble {
+      background: #2563eb;
+      color: #fff;
+      border-bottom-right-radius: 4px
+    }
+
+    .msg-row.model .msg-bubble {
+      background: #fff;
+      color: #334155;
+      border: 1px solid #f1f5f9;
+      border-top-left-radius: 4px
+    }
+
+    .typing-dots {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      padding: 4px 0
+    }
+
+    .typing-dots span {
+      width: 6px;
+      height: 6px;
+      background: #94a3b8;
+      border-radius: 50%;
+      animation: bounce .6s infinite
+    }
+
+    .typing-dots span:nth-child(2) {
+      animation-delay: .1s
+    }
+
+    .typing-dots span:nth-child(3) {
+      animation-delay: .2s
+    }
+
+    .finish-chat-btn {
+      align-self: center;
+      margin: 1.5rem 0;
+      padding: .85rem 2rem;
+      border-radius: 2rem;
+      font-size: .9rem;
+      font-weight: 700;
+      background: #1e293b;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .1);
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      transition: all .2s
+    }
+
+    .finish-chat-btn:hover {
+      background: #334155;
+      transform: scale(1.02)
+    }
+
+    /* Chat input bar */
+    .chat-input-bar {
+      padding: .75rem;
+      background: #fff;
+      border-top: 1px solid #f1f5f9;
+      z-index: 20;
+      flex-shrink: 0
+    }
+
+    .chat-progress {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 .5rem .35rem;
+      font-size: .7rem;
+      font-weight: 500
+    }
+
+    .chat-progress .label {
+      color: #94a3b8
+    }
+
+    .chat-progress .count {
+      color: #3b82f6;
+      font-weight: 700
+    }
+
+    .chat-progress .count.full {
+      color: #ef4444
+    }
+
+    .chat-input-wrap {
+      display: flex;
+      align-items: flex-end;
+      gap: .5rem;
+      background: #f8fafc;
+      padding: .35rem;
+      border-radius: 1.5rem;
+      border: 1px solid #e2e8f0;
+      transition: box-shadow .2s
+    }
+
+    .chat-input-wrap:focus-within {
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, .1)
+    }
+
+    .chat-input-wrap textarea {
+      flex: 1;
+      background: transparent;
+      border: none;
+      resize: none;
+      padding: .65rem 1rem;
+      min-height: 44px;
+      max-height: 128px;
+      font-size: .9rem;
+      color: #1e293b;
+      line-height: 1.5
+    }
+
+    .chat-input-wrap textarea::placeholder {
+      color: #94a3b8
+    }
+
+    .chat-input-wrap textarea:disabled {
+      opacity: .5
+    }
+
+    .send-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      background: #2563eb;
+      flex-shrink: 0;
+      transition: background .15s;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, .25)
+    }
+
+    .send-btn:hover:not(:disabled) {
+      background: #1d4ed8
+    }
+
+    .send-btn:disabled {
+      background: #cbd5e1;
+      box-shadow: none
+    }
+
+    .send-btn svg.spin {
+      animation: spin .8s linear infinite
+    }
+
+    /* ===== Step 6: 총평 ===== */
+    .summary-step {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem 1rem 6rem;
+      background: #f1f5f9
+    }
+
+    .summary-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding: 0 .25rem
+    }
+
+    .summary-nav .back-btn2 {
+      color: #94a3b8;
+      background: none;
+      padding: .25rem;
+      transition: color .15s
+    }
+
+    .summary-nav .back-btn2:hover {
+      color: #1e293b
+    }
+
+    .summary-nav .reset-btn {
+      font-size: .8rem;
+      font-weight: 700;
+      color: #64748b;
+      background: #fff;
+      padding: .5rem 1rem;
+      border-radius: 2rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, .04);
+      transition: color .15s
+    }
+
+    .summary-nav .reset-btn:hover {
+      color: #1e293b
+    }
+
+    .summary-card {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .04);
+      border: 1px solid #e2e8f0;
+      position: relative;
+      overflow: hidden
+    }
+
+    .summary-card .deco-tr {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 8rem;
+      height: 8rem;
+      background: #eff6ff;
+      border-bottom-left-radius: 100%;
+      opacity: .5
+    }
+
+    .summary-card .deco-bl {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 6rem;
+      height: 6rem;
+      background: #f0fdf4;
+      border-top-right-radius: 100%;
+      opacity: .5
+    }
+
+    .summary-card .header {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #f1f5f9;
+      position: relative
+    }
+
+    .summary-card .header img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid #f1f5f9;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, .06);
+      object-fit: cover
+    }
+
+    .summary-card .header .label {
+      font-size: .75rem;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: .05em
+    }
+
+    .summary-card .header .title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #1e293b
+    }
+
+    .summary-card .header .title .hl {
+      color: #2563eb
+    }
+
+    .summary-body {
+      position: relative;
+      font-size: .9rem;
+      line-height: 1.8;
+      color: #334155
+    }
+
+    .summary-body h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #1e4ed8;
+      margin: 1.25rem 0 .5rem
+    }
+
+    .summary-body strong {
+      font-weight: 700;
+      color: #1e293b
+    }
+
+    .summary-card .footer {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .4rem;
+      color: #94a3b8;
+      font-size: .7rem;
+      font-weight: 500
+    }
+
+    .download-btn {
+      margin: 1.5rem auto 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      padding: .9rem 0;
+      border-radius: .75rem;
+      font-size: .9rem;
+      font-weight: 700;
+      background: #1e293b;
+      color: #fff;
+      max-width: 20rem;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .1);
+      transition: background .2s
+    }
+
+    .download-btn:hover {
+      background: #334155
+    }
+
+    /* ===== Loading spinner ===== */
+    .loading-screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      background: #f8fafc
+    }
+
+    .loading-screen .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #e2e8f0;
+      border-top-color: #3b82f6;
+      border-radius: 50%;
+      animation: spin .8s linear infinite
+    }
+
+    .loading-screen p {
+      color: #64748b;
+      font-weight: 500;
+      animation: pulse 1.5s infinite
+    }
+
+    /* ===== SVG icons inline ===== */
+    .icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle
+    }
+
+    /* ===== Mobile ===== */
+    @media(max-width:480px) {
+      .mode-cards {
+        flex-direction: column
+      }
+
+      .home-header h1 {
+        font-size: 1.3rem
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- ============================================ -->
-<!-- All UI steps rendered here via JS            -->
-<!-- ============================================ -->
-<div id="app"></div>
+  <!-- ============================================ -->
+  <!-- All UI steps rendered here via JS            -->
+  <!-- ============================================ -->
+  <div id="app"></div>
 
-<script>
-// ================================================================
-// 김수석의 생각 뒤집기 — 프론트엔드
-// ================================================================
+  <script>
+    // ================================================================
+    // 김수석의 생각 뒤집기 — 프론트엔드
+    // ================================================================
 
-const API_URL = "https://value.kimsoosuk1.workers.dev/";
-const TEACHER_IMG = "https://res.cloudinary.com/dms5vyofw/image/upload/v1768298285/%E1%84%80%E1%85%B5%E1%86%B7%E1%84%89%E1%85%AE%E1%84%89%E1%85%A5%E1%86%A8%E1%84%8B%E1%85%A1%E1%84%8B%E1%85%B5%E1%84%8F%E1%85%A9%E1%86%AB_%E1%84%85%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%AB_%E1%84%8F%E1%85%A5%E1%86%AF%E1%84%85%E1%85%A54_vulum7.png";
+    const API_URL = "https://value.kimsoosuk1.workers.dev/";
+    const TEACHER_IMG = "https://res.cloudinary.com/dms5vyofw/image/upload/v1768298285/%E1%84%80%E1%85%B5%E1%86%B7%E1%84%89%E1%85%AE%E1%84%89%E1%85%A5%E1%86%A8%E1%84%8B%E1%85%A1%E1%84%8B%E1%85%B5%E1%84%8F%E1%85%A9%E1%86%AB_%E1%84%85%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%AB_%E1%84%8F%E1%85%A5%E1%86%AF%E1%84%85%E1%85%A54_vulum7.png";
 
-// --- SVG 아이콘 ---
-const ICONS = {
-  arrowLeft: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>`,
-  send: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg>`,
-  chevronRight: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>`,
-  download: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`,
-  search: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>`,
-  scale: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>`,
-  check: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>`,
-  loader: `<svg class="spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>`,
-};
+    // --- SVG 아이콘 ---
+    const ICONS = {
+      arrowLeft: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>`,
+      send: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg>`,
+      chevronRight: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>`,
+      download: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`,
+      search: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>`,
+      scale: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>`,
+      check: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>`,
+      loader: `<svg class="spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>`,
+    };
 
-// --- 한국어 조사 ---
-function josa(word, type) {
-  if (!word) return '';
-  const code = word.charCodeAt(word.length - 1);
-  const has = (code - 44032) % 28 > 0;
-  const map = { '이란/란': has ? '이란' : '란', '을/를': has ? '을' : '를', '이/가': has ? '이' : '가', '은/는': has ? '은' : '는' };
-  return map[type] || '';
-}
+    // --- 한국어 조사 ---
+    function josa(word, type) {
+      if (!word) return '';
+      const code = word.charCodeAt(word.length - 1);
+      const has = (code - 44032) % 28 > 0;
+      const map = { '이란/란': has ? '이란' : '란', '을/를': has ? '을' : '를', '이/가': has ? '이' : '가', '은/는': has ? '은' : '는' };
+      return map[type] || '';
+    }
 
-// --- 가치관 데이터 (프롬프트 없이 UI 표시용 데이터만) ---
-const CATEGORIES = {
-  thinking: { name: '생각의 힘', color: 'cat-thinking', bar: 'bar-thinking' },
-  emotional: { name: '마음의 힘', color: 'cat-emotional', bar: 'bar-emotional' },
-  social: { name: '관계의 힘', color: 'cat-social', bar: 'bar-social' },
-  harmonious: { name: '어울림의 힘', color: 'cat-harmonious', bar: 'bar-harmonious' },
-};
+    // --- 가치관 데이터 (프롬프트 없이 UI 표시용 데이터만) ---
+    const CATEGORIES = {
+      thinking: { name: '사고형', color: 'cat-thinking', bar: 'bar-thinking' },
+      emotional: { name: '정서형', color: 'cat-emotional', bar: 'bar-emotional' },
+      social: { name: '사회형', color: 'cat-social', bar: 'bar-social' },
+      harmonious: { name: '화합형', color: 'cat-harmonious', bar: 'bar-harmonious' },
+    };
 
-const VALUES = [
-  { id:1, name:'창의', category:'thinking', keywords:['독창성','창의력'],
-    definition:'새로운 것, 새로운 업무 방법을 찾고 고민하는 것을 좋아하는 나는 더 좋은 방법을 생각할 수 있음에도 항상 같은 방법만 고집하는 것을 지루해할 수 있습니다.' },
-  { id:2, name:'합리', category:'thinking', keywords:['비판적사고','개방성'],
-    definition:'모든 면에서 충분히 검토하는 것을 좋아하는 나는 성급하지 않고 확실한 근거에 따라 결정합니다. 그래서 논리에 따라 내 생각을 쉽게 바꿀 수도 있습니다.' },
-  { id:3, name:'호기심', category:'thinking', keywords:['흥미','모험'],
-    definition:'나는 모든 것에 대해서 호기심이 있습니다. 왜 그럴까 언제나 질문하고 모든 주제와 화제에 관심이 갑니다. 생각하고 발견하는 것은 나에게 큰 즐거움입니다.' },
-  { id:4, name:'사색', category:'thinking', keywords:['지혜','융합'],
-    definition:'아마 주변인들은 내가 지혜롭다고 생각할 겁니다. 상황을 전체적으로 볼 줄 아는 나에게 주변 사람들이 조언을 구하지는 않나요? 나는 모두가 인정하는 현명한 이야기를 잘 합니다.' },
-  { id:5, name:'배움', category:'thinking', keywords:['배움','학습'],
-    definition:'나는 업무로든 공부로든 새로운 것을 배우기를 좋아합니다. 일, 학교, 독서, 박물관 등 배움의 기회가 있는 곳이라면 어디든 좋아합니다.' },
-  { id:6, name:'인내', category:'thinking', keywords:['자제력','의식적'],
-    definition:'나는 나의 감정과 행동을 조절할 수 있습니다. 자제력을 가지고 놀거나 먹고 싶은 생각과 감정을 통제하며 이런 욕구가 나를 통제하도록 놓아두지 않습니다.' },
-  { id:7, name:'정직', category:'emotional', keywords:['솔직함','정직성'],
-    definition:'나는 정직한 사람으로서 거짓말하는 것을 좋아하지 않고 언제나 진심으로 모두를 대합니다. 가식적인 것은 싫어합니다.' },
-  { id:8, name:'꿈', category:'emotional', keywords:['이상','믿음'],
-    definition:'나는 눈에 보이지 않는 것에 대한 믿음을 가지고 있고 큰 그림을 그리기 좋아합니다. 나의 믿음에 따라 행동하며 그 믿음에서 위안을 얻습니다.' },
-  { id:9, name:'용감', category:'emotional', keywords:['소신','신념'],
-    definition:'나는 위협, 도전, 난관, 고통 등에 의해 위축되지 않는 용감한 사람입니다. 반대에 부딪히더라도 무엇이 옳은지 분명하게 말하며, 나의 신념에 따라 행동하는 것을 좋아합니다.' },
-  { id:10, name:'열정', category:'emotional', keywords:['에너지','모험'],
-    definition:'나는 언제나 에너지가 넘칩니다. 어떤 것이든 어중간하게 하거나 건성으로 하는 것은 좋아하지 않습니다. 나에게 있어 삶은 끊임없는 도전입니다.' },
-  { id:11, name:'예술', category:'emotional', keywords:['심미안','탁월성'],
-    definition:'나는 예술, 수학, 과학, 일상 등 모든 경험에서 탁월함을 잘 발견합니다. 돋보이고 우수한 것을 직감적으로 알아내는 능력이 있고 이를 즐깁니다.' },
-  { id:12, name:'긍정', category:'emotional', keywords:['낙관성','미래지향주의'],
-    definition:'나는 미래에 최고가 되길 기대하며 그것을 성취하기 위해 노력합니다. 나는 나의 미래를 밝게 보고 내가 만들어갈 수 있다고 생각하는 힘이 있습니다.' },
-  { id:13, name:'승부', category:'social', keywords:['경쟁','승리'],
-    definition:'나는 상대와의 경쟁을 통해 성장하는 것을 중요하게 생각합니다. 단순히 승리를 즐기는 것을 너머 승부라는 행위 속에서 즐거움과 발전의 의미를 찾습니다.' },
-  { id:14, name:'책임감', category:'social', keywords:['임무','달성'],
-    definition:'나는 한 번 시작한 일은 시기적절하게 끝까지 마칩니다. 특히 공동의 과제에서 대단한 집중력을 보이며, 일을 완수하는 것에서 큰 만족감을 얻습니다.' },
-  { id:15, name:'친화력', category:'social', keywords:['화목','친목'],
-    definition:'나는 갈등 상황없이 주변을 원만하고 행복하게 만드는 것을 중요하게 생각합니다. 그것이 감정적으로나 이성적으로나 모두에게 가장 좋은 방향이라 믿습니다.' },
-  { id:16, name:'협동', category:'social', keywords:['협동심','충성심'],
-    definition:'나는 팀워크가 좋습니다. 성실하고 헌신적인 팀원이며, 언제나 내 역할을 해내고 우리 조직의 성공을 위해서 열심히 일합니다.' },
-  { id:17, name:'정의', category:'social', keywords:['공평','정의감'],
-    definition:'나는 모든 사람들을 공정하게 대하는 것을 좋아합니다. 나의 감정 때문에 다른 사람들에 대한 결정을 잘못하는 것을 싫어하고 모든 사람에게 기회를 줍니다.' },
-  { id:18, name:'리더십', category:'social', keywords:['격려','조직'],
-    definition:'나는 리더십을 발휘하여 친구들을 격려하고 소속감을 느끼게 함으로써 조화를 이루어내는 것을 좋아합니다. 나는 일을 체계화하고 잘 진행되고 있는지 확인하는 것을 잘 합니다.' },
-  { id:19, name:'공감', category:'harmonious', keywords:['공감능력','대인지능'],
-    definition:'나는 다른 사람들의 감정을 민감하게 알아차립니다. 서로다른 여러 상황에서 무엇을 해야 할지 알고 있으며, 다른 사람들을 편안하게 만들어주는 능력을 갖고 있습니다.' },
-  { id:20, name:'재미', category:'harmonious', keywords:['쾌활함','장난'],
-    definition:'나는 웃고 장난치는 것을 좋아하고, 다른 사람들을 즐겁게 하는 것을 중요하게 생각합니다. 나는 어떤 상황이든지 밝은 면을 보려고 노력하는 긍정성을 가지고 있습니다.' },
-  { id:21, name:'감사', category:'harmonious', keywords:['고마움','공감'],
-    definition:'나는 나에게 일어나는 좋은 일들을 결코 당연하다고 생각하지 않습니다. 감사의 표현을 잘 해서 지인들은 내가 언제나 감사할 줄 아는 사람이라는 것을 알고 있을 겁니다.' },
-  { id:22, name:'정', category:'harmonious', keywords:['친구','사랑'],
-    definition:'나는 다른 사람과의 관계를 소중하게 생각합니다. 특히, 친한 지인들과의 관계를 소중하게 생각합니다. 내가 가장 친하다고 느끼는 지인들도 역시 나와 가장 친하다고 느낄 겁니다.' },
-  { id:23, name:'겸손', category:'harmonious', keywords:['업적','양보'],
-    definition:'나는 나서서 주목을 끄는 것보다 내 성적이나 업무 자체가 나의 성과를 말해주는 것을 더 좋아합니다. 하지만 다른 사람들이 아마 나의 겸손함을 알아보고 좋게 생각할 겁니다.' },
-  { id:24, name:'포용', category:'harmonious', keywords:['용서','따뜻함'],
-    definition:'나는 잘못을 저지른 사람에게도 관대하며, 언제나 사람들에게 다시 기회를 주려합니다. 나는 복수를 싫어합니다. 자비롭게 사람들을 대합니다.' },
-];
+    const VALUES = [
+      {
+        id: 1, name: '창의', category: 'thinking', keywords: ['독창성', '창의력'],
+        definition: '새로운 것, 새로운 업무 방법을 찾고 고민하는 것을 좋아하는 나는 더 좋은 방법을 생각할 수 있음에도 항상 같은 방법만 고집하는 것을 지루해할 수 있습니다.'
+      },
+      {
+        id: 2, name: '합리', category: 'thinking', keywords: ['비판적사고', '개방성'],
+        definition: '모든 면에서 충분히 검토하는 것을 좋아하는 나는 성급하지 않고 확실한 근거에 따라 결정합니다. 그래서 논리에 따라 내 생각을 쉽게 바꿀 수도 있습니다.'
+      },
+      {
+        id: 3, name: '호기심', category: 'thinking', keywords: ['흥미', '모험'],
+        definition: '나는 모든 것에 대해서 호기심이 있습니다. 왜 그럴까 언제나 질문하고 모든 주제와 화제에 관심이 갑니다. 생각하고 발견하는 것은 나에게 큰 즐거움입니다.'
+      },
+      {
+        id: 4, name: '사색', category: 'thinking', keywords: ['지혜', '융합'],
+        definition: '아마 주변인들은 내가 지혜롭다고 생각할 겁니다. 상황을 전체적으로 볼 줄 아는 나에게 주변 사람들이 조언을 구하지는 않나요? 나는 모두가 인정하는 현명한 이야기를 잘 합니다.'
+      },
+      {
+        id: 5, name: '배움', category: 'thinking', keywords: ['배움', '학습'],
+        definition: '나는 업무로든 공부로든 새로운 것을 배우기를 좋아합니다. 일, 학교, 독서, 박물관 등 배움의 기회가 있는 곳이라면 어디든 좋아합니다.'
+      },
+      {
+        id: 6, name: '인내', category: 'thinking', keywords: ['자제력', '의식적'],
+        definition: '나는 나의 감정과 행동을 조절할 수 있습니다. 자제력을 가지고 놀거나 먹고 싶은 생각과 감정을 통제하며 이런 욕구가 나를 통제하도록 놓아두지 않습니다.'
+      },
+      {
+        id: 7, name: '정직', category: 'emotional', keywords: ['솔직함', '정직성'],
+        definition: '나는 정직한 사람으로서 거짓말하는 것을 좋아하지 않고 언제나 진심으로 모두를 대합니다. 가식적인 것은 싫어합니다.'
+      },
+      {
+        id: 8, name: '꿈', category: 'emotional', keywords: ['이상', '믿음'],
+        definition: '나는 눈에 보이지 않는 것에 대한 믿음을 가지고 있고 큰 그림을 그리기 좋아합니다. 나의 믿음에 따라 행동하며 그 믿음에서 위안을 얻습니다.'
+      },
+      {
+        id: 9, name: '용감', category: 'emotional', keywords: ['소신', '신념'],
+        definition: '나는 위협, 도전, 난관, 고통 등에 의해 위축되지 않는 용감한 사람입니다. 반대에 부딪히더라도 무엇이 옳은지 분명하게 말하며, 나의 신념에 따라 행동하는 것을 좋아합니다.'
+      },
+      {
+        id: 10, name: '열정', category: 'emotional', keywords: ['에너지', '모험'],
+        definition: '나는 언제나 에너지가 넘칩니다. 어떤 것이든 어중간하게 하거나 건성으로 하는 것은 좋아하지 않습니다. 나에게 있어 삶은 끊임없는 도전입니다.'
+      },
+      {
+        id: 11, name: '예술', category: 'emotional', keywords: ['심미안', '탁월성'],
+        definition: '나는 예술, 수학, 과학, 일상 등 모든 경험에서 탁월함을 잘 발견합니다. 돋보이고 우수한 것을 직감적으로 알아내는 능력이 있고 이를 즐깁니다.'
+      },
+      {
+        id: 12, name: '긍정', category: 'emotional', keywords: ['낙관성', '미래지향주의'],
+        definition: '나는 미래에 최고가 되길 기대하며 그것을 성취하기 위해 노력합니다. 나는 나의 미래를 밝게 보고 내가 만들어갈 수 있다고 생각하는 힘이 있습니다.'
+      },
+      {
+        id: 13, name: '승부', category: 'social', keywords: ['경쟁', '승리'],
+        definition: '나는 상대와의 경쟁을 통해 성장하는 것을 중요하게 생각합니다. 단순히 승리를 즐기는 것을 너머 승부라는 행위 속에서 즐거움과 발전의 의미를 찾습니다.'
+      },
+      {
+        id: 14, name: '책임감', category: 'social', keywords: ['임무', '달성'],
+        definition: '나는 한 번 시작한 일은 시기적절하게 끝까지 마칩니다. 특히 공동의 과제에서 대단한 집중력을 보이며, 일을 완수하는 것에서 큰 만족감을 얻습니다.'
+      },
+      {
+        id: 15, name: '친화력', category: 'social', keywords: ['화목', '친목'],
+        definition: '나는 갈등 상황없이 주변을 원만하고 행복하게 만드는 것을 중요하게 생각합니다. 그것이 감정적으로나 이성적으로나 모두에게 가장 좋은 방향이라 믿습니다.'
+      },
+      {
+        id: 16, name: '협동', category: 'social', keywords: ['협동심', '충성심'],
+        definition: '나는 팀워크가 좋습니다. 성실하고 헌신적인 팀원이며, 언제나 내 역할을 해내고 우리 조직의 성공을 위해서 열심히 일합니다.'
+      },
+      {
+        id: 17, name: '정의', category: 'social', keywords: ['공평', '정의감'],
+        definition: '나는 모든 사람들을 공정하게 대하는 것을 좋아합니다. 나의 감정 때문에 다른 사람들에 대한 결정을 잘못하는 것을 싫어하고 모든 사람에게 기회를 줍니다.'
+      },
+      {
+        id: 18, name: '리더십', category: 'social', keywords: ['격려', '조직'],
+        definition: '나는 리더십을 발휘하여 친구들을 격려하고 소속감을 느끼게 함으로써 조화를 이루어내는 것을 좋아합니다. 나는 일을 체계화하고 잘 진행되고 있는지 확인하는 것을 잘 합니다.'
+      },
+      {
+        id: 19, name: '공감', category: 'harmonious', keywords: ['공감능력', '대인지능'],
+        definition: '나는 다른 사람들의 감정을 민감하게 알아차립니다. 서로다른 여러 상황에서 무엇을 해야 할지 알고 있으며, 다른 사람들을 편안하게 만들어주는 능력을 갖고 있습니다.'
+      },
+      {
+        id: 20, name: '재미', category: 'harmonious', keywords: ['쾌활함', '장난'],
+        definition: '나는 웃고 장난치는 것을 좋아하고, 다른 사람들을 즐겁게 하는 것을 중요하게 생각합니다. 나는 어떤 상황이든지 밝은 면을 보려고 노력하는 긍정성을 가지고 있습니다.'
+      },
+      {
+        id: 21, name: '감사', category: 'harmonious', keywords: ['고마움', '공감'],
+        definition: '나는 나에게 일어나는 좋은 일들을 결코 당연하다고 생각하지 않습니다. 감사의 표현을 잘 해서 지인들은 내가 언제나 감사할 줄 아는 사람이라는 것을 알고 있을 겁니다.'
+      },
+      {
+        id: 22, name: '정', category: 'harmonious', keywords: ['친구', '사랑'],
+        definition: '나는 다른 사람과의 관계를 소중하게 생각합니다. 특히, 친한 지인들과의 관계를 소중하게 생각합니다. 내가 가장 친하다고 느끼는 지인들도 역시 나와 가장 친하다고 느낄 겁니다.'
+      },
+      {
+        id: 23, name: '겸손', category: 'harmonious', keywords: ['업적', '양보'],
+        definition: '나는 나서서 주목을 끄는 것보다 내 성적이나 업무 자체가 나의 성과를 말해주는 것을 더 좋아합니다. 하지만 다른 사람들이 아마 나의 겸손함을 알아보고 좋게 생각할 겁니다.'
+      },
+      {
+        id: 24, name: '포용', category: 'harmonious', keywords: ['용서', '따뜻함'],
+        definition: '나는 잘못을 저지른 사람에게도 관대하며, 언제나 사람들에게 다시 기회를 주려합니다. 나는 복수를 싫어합니다. 자비롭게 사람들을 대합니다.'
+      },
+    ];
 
-const QUESTIONS = {
-  LOW: [
-    "평소에 이 가치관이 나에게 덜 중요하게 느껴졌던 이유나, 굳이 필요 없다고 생각했던 순간이 있었나요?",
-    "반대로 이 가치관을 아주 중요하게 여기는 사람들을 볼 때, 솔직히 어떤 생각이나 느낌이 들었나요?",
-    "만약 내 삶에 이 가치관을 아주 조금만 더해본다면, 나의 일상이나 관계에 어떤 변화가 생길까요?",
-  ],
-  HIGH: [
-    "최근 이 가치관과 관련해서 기억에 남는 나의 행동이나 경험이 있나요?",
-    "그 경험을 할 때(혹은 떠올렸을 때) 나의 솔직한 감정이나 기분은 어땠나요?",
-    "앞으로 일상에서 이 가치관을 어떻게 대하고 싶나요? (더 신경쓰기, 혹은 조금 내려놓기 등)",
-  ],
-};
+    const QUESTIONS = {
+      LOW: [
+        "평소에 이 가치관이 나에게 덜 중요하게 느껴졌던 이유나, 굳이 필요 없다고 생각했던 순간이 있었나요?",
+        "반대로 이 가치관을 아주 중요하게 여기는 사람들을 볼 때, 솔직히 어떤 생각이나 느낌이 들었나요?",
+        "만약 내 삶에 이 가치관을 아주 조금만 더해본다면, 나의 일상이나 관계에 어떤 변화가 생길까요?",
+      ],
+      HIGH: [
+        "최근 이 가치관과 관련해서 기억에 남는 나의 행동이나 경험이 있나요?",
+        "그 경험을 할 때(혹은 떠올렸을 때) 나의 솔직한 감정이나 기분은 어땠나요?",
+        "앞으로 일상에서 이 가치관을 어떻게 대하고 싶나요? (더 신경쓰기, 혹은 조금 내려놓기 등)",
+      ],
+    };
 
-// --- 상태 ---
-let state = {
-  step: 0, // 0~6
-  mode: null, // 'LOW' | 'HIGH'
-  catFilter: 'ALL',
-  selectedValue: null,
-  userDefinition: '',
-  sentences: [],
-  revealedCount: 1,
-  threeAnswers: ['', '', ''],
-  chatHistory: [],
-  chatTurnCount: 0,
-  isChatFinished: false,
-  isTyping: false,
-  userInput: '',
-  finalReflection: '',
-  finalSummary: '',
-  isGeneratingSummary: false,
-};
+    // --- 상태 ---
+    let state = {
+      step: 0, // 0~6
+      mode: null, // 'LOW' | 'HIGH'
+      catFilter: 'ALL',
+      selectedValue: null,
+      userDefinition: '',
+      sentences: [],
+      revealedCount: 1,
+      threeAnswers: ['', '', ''],
+      chatHistory: [],
+      chatTurnCount: 0,
+      isChatFinished: false,
+      isTyping: false,
+      userInput: '',
+      finalReflection: '',
+      finalSummary: '',
+      isGeneratingSummary: false,
+    };
 
-function setState(patch) {
-  Object.assign(state, patch);
-  render();
-}
+    function setState(patch) {
+      Object.assign(state, patch);
+      render();
+    }
 
-// --- API 호출 ---
-async function apiCall(body) {
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: 'Network error' }));
-    throw new Error(err.error || `HTTP ${res.status}`);
-  }
-  return res.json();
-}
+    // --- API 호출 ---
+    async function apiCall(body) {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: 'Network error' }));
+        throw new Error(err.error || `HTTP ${res.status}`);
+      }
+      return res.json();
+    }
 
-// --- 마크다운 렌더 (간이) ---
-function renderMd(text) {
-  if (!text) return '';
-  return text
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/### (.+)/g, '<h3>$1</h3>')
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\n/g, '<br>');
-}
+    // --- 마크다운 렌더 (간이) ---
+    function renderMd(text) {
+      if (!text) return '';
+      return text
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/### (.+)/g, '<h3>$1</h3>')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\n/g, '<br>');
+    }
 
-// --- 메인 렌더 ---
-const $app = document.getElementById('app');
+    // --- 메인 렌더 ---
+    const $app = document.getElementById('app');
 
-function render() {
-  switch (state.step) {
-    case 0: return renderHome();
-    case 1: return renderStep1();
-    case 2: return renderStep2();
-    case 3: return renderStep3();
-    case 4: return renderStep4();
-    case 5: return renderStep5();
-    case 6: return renderStep6();
-  }
-}
+    function render() {
+      switch (state.step) {
+        case 0: return renderHome();
+        case 1: return renderStep1();
+        case 2: return renderStep2();
+        case 3: return renderStep3();
+        case 4: return renderStep4();
+        case 5: return renderStep5();
+        case 6: return renderStep6();
+      }
+    }
 
-// ====== Step 0: 홈 ======
-function renderHome() {
-  const filtered = state.mode
-    ? (state.catFilter === 'ALL' ? VALUES : VALUES.filter(v => v.category === state.catFilter))
-    : [];
+    // ====== Step 0: 홈 ======
+    function renderHome() {
+      const filtered = state.mode
+        ? (state.catFilter === 'ALL' ? VALUES : VALUES.filter(v => v.category === state.catFilter))
+        : [];
 
-  $app.innerHTML = `
+      $app.innerHTML = `
     <div class="home">
       <header class="home-header">
         <div class="logo">
@@ -395,46 +1441,46 @@ function renderHome() {
           <div class="cat-filters">
             <button class="cat-btn ${state.catFilter === 'ALL' ? 'active' : ''}" data-cat="ALL">전체</button>
             ${Object.entries(CATEGORIES).map(([k, v]) =>
-              `<button class="cat-btn ${state.catFilter === k ? 'active' : ''}" data-cat="${k}">${v.name}</button>`
-            ).join('')}
+        `<button class="cat-btn ${state.catFilter === k ? 'active' : ''}" data-cat="${k}">${v.name}</button>`
+      ).join('')}
           </div>
           <div class="value-grid">
             ${filtered.map(v => {
-              const c = CATEGORIES[v.category];
-              return `<button class="value-card" data-vid="${v.id}">
+        const c = CATEGORIES[v.category];
+        return `<button class="value-card" data-vid="${v.id}">
                 <div class="bar ${c.bar}"></div>
                 <span class="cat-label ${c.color}">${c.name}</span>
                 <h3>${v.name}</h3>
                 <div class="tags">${v.keywords.map(k => `<span class="tag">#${k}</span>`).join('')}</div>
               </button>`;
-            }).join('')}
+      }).join('')}
           </div>
         </div>
       </div>
     </div>`;
 
-  // 이벤트
-  $app.querySelectorAll('[data-mode]').forEach(btn => {
-    btn.onclick = () => setState({ mode: btn.dataset.mode, catFilter: 'ALL' });
-  });
-  $app.querySelectorAll('[data-cat]').forEach(btn => {
-    btn.onclick = () => setState({ catFilter: btn.dataset.cat });
-  });
-  $app.querySelectorAll('[data-vid]').forEach(btn => {
-    btn.onclick = () => {
-      const v = VALUES.find(x => x.id === +btn.dataset.vid);
-      setState({ selectedValue: v, step: 1 });
-    };
-  });
-}
+      // 이벤트
+      $app.querySelectorAll('[data-mode]').forEach(btn => {
+        btn.onclick = () => setState({ mode: btn.dataset.mode, catFilter: 'ALL' });
+      });
+      $app.querySelectorAll('[data-cat]').forEach(btn => {
+        btn.onclick = () => setState({ catFilter: btn.dataset.cat });
+      });
+      $app.querySelectorAll('[data-vid]').forEach(btn => {
+        btn.onclick = () => {
+          const v = VALUES.find(x => x.id === +btn.dataset.vid);
+          setState({ selectedValue: v, step: 1 });
+        };
+      });
+    }
 
-// ====== App Shell 래퍼 ======
-function appShell(content, opts = {}) {
-  const v = state.selectedValue;
-  const modeLabel = state.mode === 'LOW' ? '좀 먼 가치관' : '제일 나다운 가치관';
-  const dotClass = state.mode === 'LOW' ? 'dot-low' : 'dot-high';
+    // ====== App Shell 래퍼 ======
+    function appShell(content, opts = {}) {
+      const v = state.selectedValue;
+      const modeLabel = state.mode === 'LOW' ? '좀 먼 가치관' : '제일 나다운 가치관';
+      const dotClass = state.mode === 'LOW' ? 'dot-low' : 'dot-high';
 
-  const header = opts.hideHeader ? '' : `
+      const header = opts.hideHeader ? '' : `
     <div class="app-header">
       <div style="display:flex;align-items:center;gap:.5rem">
         <button class="back-btn" id="globalBack">${ICONS.arrowLeft}</button>
@@ -448,7 +1494,7 @@ function appShell(content, opts = {}) {
       </div>
     </div>`;
 
-  $app.innerHTML = `
+      $app.innerHTML = `
     <div class="app-shell">
       <div class="app-container">
         ${header}
@@ -456,24 +1502,24 @@ function appShell(content, opts = {}) {
       </div>
     </div>`;
 
-  const backBtn = document.getElementById('globalBack');
-  if (backBtn) backBtn.onclick = resetApp;
-}
+      const backBtn = document.getElementById('globalBack');
+      if (backBtn) backBtn.onclick = resetApp;
+    }
 
-function resetApp() {
-  state = {
-    step: 0, mode: null, catFilter: 'ALL', selectedValue: null,
-    userDefinition: '', sentences: [], revealedCount: 1, threeAnswers: ['', '', ''],
-    chatHistory: [], chatTurnCount: 0, isChatFinished: false, isTyping: false,
-    userInput: '', finalReflection: '', finalSummary: '', isGeneratingSummary: false,
-  };
-  render();
-}
+    function resetApp() {
+      state = {
+        step: 0, mode: null, catFilter: 'ALL', selectedValue: null,
+        userDefinition: '', sentences: [], revealedCount: 1, threeAnswers: ['', '', ''],
+        chatHistory: [], chatTurnCount: 0, isChatFinished: false, isTyping: false,
+        userInput: '', finalReflection: '', finalSummary: '', isGeneratingSummary: false,
+      };
+      render();
+    }
 
-// ====== Step 1: 나의 정의 ======
-function renderStep1() {
-  const v = state.selectedValue;
-  appShell(`
+    // ====== Step 1: 나의 정의 ======
+    function renderStep1() {
+      const v = state.selectedValue;
+      appShell(`
     <div class="input-step">
       <div class="input-card slide-up">
         <div class="icon-circle" style="background:#dbeafe;color:#2563eb">${ICONS.search}</div>
@@ -484,21 +1530,21 @@ function renderStep1() {
       </div>
     </div>`);
 
-  const input = document.getElementById('defInput');
-  const btn = document.getElementById('defSubmit');
-  input.oninput = () => { state.userDefinition = input.value; btn.disabled = !input.value.trim(); };
-  btn.disabled = !state.userDefinition.trim();
-  btn.onclick = () => {
-    if (!state.userDefinition.trim()) return;
-    const sents = state.selectedValue.definition.match(/[^.?!]+[.?!]+/g) || [state.selectedValue.definition];
-    setState({ sentences: sents, revealedCount: 1, step: 2 });
-  };
-}
+      const input = document.getElementById('defInput');
+      const btn = document.getElementById('defSubmit');
+      input.oninput = () => { state.userDefinition = input.value; btn.disabled = !input.value.trim(); };
+      btn.disabled = !state.userDefinition.trim();
+      btn.onclick = () => {
+        if (!state.userDefinition.trim()) return;
+        const sents = state.selectedValue.definition.match(/[^.?!]+[.?!]+/g) || [state.selectedValue.definition];
+        setState({ sentences: sents, revealedCount: 1, step: 2 });
+      };
+    }
 
-// ====== Step 2: 공식 정의 ======
-function renderStep2() {
-  const isLast = state.revealedCount >= state.sentences.length;
-  appShell(`
+    // ====== Step 2: 공식 정의 ======
+    function renderStep2() {
+      const isLast = state.revealedCount >= state.sentences.length;
+      appShell(`
     <div class="define-step">
       <p class="hint">이 가치를 중요하게 생각하는 사람들은 보통 이런 특징을 가지고 있어요.</p>
       ${state.sentences.slice(0, state.revealedCount).map((s, i) =>
@@ -507,19 +1553,19 @@ function renderStep2() {
       <button class="next-btn" id="nextSentBtn">${isLast ? '생각 넓히기 시작' : '다음 문장 읽기'} ${ICONS.chevronRight}</button>
     </div>`);
 
-  document.getElementById('nextSentBtn').onclick = () => {
-    if (state.revealedCount < state.sentences.length) {
-      setState({ revealedCount: state.revealedCount + 1 });
-    } else {
-      setState({ step: 3 });
+      document.getElementById('nextSentBtn').onclick = () => {
+        if (state.revealedCount < state.sentences.length) {
+          setState({ revealedCount: state.revealedCount + 1 });
+        } else {
+          setState({ step: 3 });
+        }
+      };
     }
-  };
-}
 
-// ====== Step 3: 3가지 질문 ======
-function renderStep3() {
-  const qs = QUESTIONS[state.mode];
-  appShell(`
+    // ====== Step 3: 3가지 질문 ======
+    function renderStep3() {
+      const qs = QUESTIONS[state.mode];
+      appShell(`
     <div class="questions-step">
       <h2><span class="badge">?</span> 내 마음 들여다보기</h2>
       ${qs.map((q, i) => `
@@ -532,106 +1578,106 @@ function renderStep3() {
       </div>
     </div>`);
 
-  $app.querySelectorAll('[data-qi]').forEach(ta => {
-    ta.oninput = () => { state.threeAnswers[+ta.dataset.qi] = ta.value; updateQBtn(); };
-  });
-  const qBtn = document.getElementById('qSubmit');
-  function updateQBtn() { qBtn.disabled = state.threeAnswers.some(a => !a.trim()); }
-  updateQBtn();
-  qBtn.onclick = () => {
-    if (state.threeAnswers.some(a => !a.trim())) return;
-    setState({ step: 4 });
-    startChat();
-  };
-}
+      $app.querySelectorAll('[data-qi]').forEach(ta => {
+        ta.oninput = () => { state.threeAnswers[+ta.dataset.qi] = ta.value; updateQBtn(); };
+      });
+      const qBtn = document.getElementById('qSubmit');
+      function updateQBtn() { qBtn.disabled = state.threeAnswers.some(a => !a.trim()); }
+      updateQBtn();
+      qBtn.onclick = () => {
+        if (state.threeAnswers.some(a => !a.trim())) return;
+        setState({ step: 4 });
+        startChat();
+      };
+    }
 
-// ====== Step 4: 채팅 ======
-async function startChat() {
-  state.isTyping = true;
-  render();
-  try {
-    const data = await apiCall({
-      type: 'start',
-      mode: state.mode,
-      valueName: state.selectedValue.name,
-      userDefinition: state.userDefinition,
-      threeAnswers: state.threeAnswers,
-    });
-    state.chatHistory = [{ role: 'model', text: data.text }];
-  } catch (e) {
-    state.chatHistory = [{ role: 'model', text: '네트워크가 불안하네. 새로고침 후 다시 시도해줄래?' }];
-  }
-  state.isTyping = false;
-  render();
-  scrollChat();
-}
+    // ====== Step 4: 채팅 ======
+    async function startChat() {
+      state.isTyping = true;
+      render();
+      try {
+        const data = await apiCall({
+          type: 'start',
+          mode: state.mode,
+          valueName: state.selectedValue.name,
+          userDefinition: state.userDefinition,
+          threeAnswers: state.threeAnswers,
+        });
+        state.chatHistory = [{ role: 'model', text: data.text }];
+      } catch (e) {
+        state.chatHistory = [{ role: 'model', text: '네트워크가 불안하네. 새로고침 후 다시 시도해줄래?' }];
+      }
+      state.isTyping = false;
+      render();
+      scrollChat();
+    }
 
-async function sendMessage() {
-  const msg = state.userInput.trim();
-  if (!msg || state.chatTurnCount >= 7 || state.isTyping) return;
-  const turn = state.chatTurnCount + 1;
-  state.chatHistory.push({ role: 'user', text: msg });
-  state.userInput = '';
-  state.chatTurnCount = turn;
-  state.isTyping = true;
-  render();
-  scrollChat();
+    async function sendMessage() {
+      const msg = state.userInput.trim();
+      if (!msg || state.chatTurnCount >= 7 || state.isTyping) return;
+      const turn = state.chatTurnCount + 1;
+      state.chatHistory.push({ role: 'user', text: msg });
+      state.userInput = '';
+      state.chatTurnCount = turn;
+      state.isTyping = true;
+      render();
+      scrollChat();
 
-  try {
-    const data = await apiCall({
-      type: 'continue',
-      history: state.chatHistory,
-      userMessage: msg,
-      turnCount: turn,
-    });
-    state.chatHistory.push({ role: 'model', text: data.text });
-    if (turn === 7) state.isChatFinished = true;
-  } catch (e) {
-    state.chatHistory.push({ role: 'model', text: '앗, 통신에 문제가 생겼어. 다시 말해줄래?' });
-    state.chatTurnCount = turn - 1;
-  }
-  state.isTyping = false;
-  render();
-  scrollChat();
-}
+      try {
+        const data = await apiCall({
+          type: 'continue',
+          history: state.chatHistory,
+          userMessage: msg,
+          turnCount: turn,
+        });
+        state.chatHistory.push({ role: 'model', text: data.text });
+        if (turn === 7) state.isChatFinished = true;
+      } catch (e) {
+        state.chatHistory.push({ role: 'model', text: '앗, 통신에 문제가 생겼어. 다시 말해줄래?' });
+        state.chatTurnCount = turn - 1;
+      }
+      state.isTyping = false;
+      render();
+      scrollChat();
+    }
 
-function scrollChat() {
-  requestAnimationFrame(() => {
-    const el = document.getElementById('chatScroll');
-    if (el) el.scrollTop = el.scrollHeight;
-  });
-}
+    function scrollChat() {
+      requestAnimationFrame(() => {
+        const el = document.getElementById('chatScroll');
+        if (el) el.scrollTop = el.scrollHeight;
+      });
+    }
 
-function renderStep4() {
-  const v = state.selectedValue;
-  const modeColor = state.mode === 'LOW' ? 'color:#3b82f6' : 'color:#22c55e';
-  const modeLabel = state.mode === 'LOW' ? '좀 먼 가치관' : '제일 나다운 가치관';
+    function renderStep4() {
+      const v = state.selectedValue;
+      const modeColor = state.mode === 'LOW' ? 'color:#3b82f6' : 'color:#22c55e';
+      const modeLabel = state.mode === 'LOW' ? '좀 먼 가치관' : '제일 나다운 가치관';
 
-  let messagesHtml = `
+      let messagesHtml = `
     <div class="chat-badge"><div class="chat-badge-inner">
       <div class="mode-label" style="${modeColor}">${modeLabel}</div>
       <h3>${v.name}</h3>
     </div></div>`;
 
-  state.chatHistory.forEach((m, i) => {
-    const isModel = m.role === 'model';
-    const avatar = isModel && i > 0 ? `<img class="avatar" src="${TEACHER_IMG}" crossOrigin="anonymous" alt="T">` : '';
-    messagesHtml += `<div class="msg-row ${m.role} fade-in">${avatar}<div class="msg-bubble">${renderMd(m.text)}</div></div>`;
-  });
+      state.chatHistory.forEach((m, i) => {
+        const isModel = m.role === 'model';
+        const avatar = isModel && i > 0 ? `<img class="avatar" src="${TEACHER_IMG}" crossOrigin="anonymous" alt="T">` : '';
+        messagesHtml += `<div class="msg-row ${m.role} fade-in">${avatar}<div class="msg-bubble">${renderMd(m.text)}</div></div>`;
+      });
 
-  if (state.isTyping) {
-    messagesHtml += `<div class="msg-row model"><img class="avatar" src="${TEACHER_IMG}" crossOrigin="anonymous" alt="T"><div class="msg-bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div></div>`;
-  }
+      if (state.isTyping) {
+        messagesHtml += `<div class="msg-row model"><img class="avatar" src="${TEACHER_IMG}" crossOrigin="anonymous" alt="T"><div class="msg-bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div></div>`;
+      }
 
-  if (state.isChatFinished && !state.isTyping) {
-    messagesHtml += `<button class="finish-chat-btn fade-in" id="goStep5">마지막 생각 정리하기 ${ICONS.chevronRight}</button>`;
-  }
+      if (state.isChatFinished && !state.isTyping) {
+        messagesHtml += `<button class="finish-chat-btn fade-in" id="goStep5">마지막 생각 정리하기 ${ICONS.chevronRight}</button>`;
+      }
 
-  const inputDisabled = state.isChatFinished || state.isTyping;
-  const sendDisabled = !state.userInput.trim() || inputDisabled;
-  const countClass = state.chatTurnCount >= 7 ? 'count full' : 'count';
+      const inputDisabled = state.isChatFinished || state.isTyping;
+      const sendDisabled = !state.userInput.trim() || inputDisabled;
+      const countClass = state.chatTurnCount >= 7 ? 'count full' : 'count';
 
-  appShell(`
+      appShell(`
     <div class="chat-body" id="chatScroll">${messagesHtml}</div>
     <div class="chat-input-bar">
       <div class="chat-progress">
@@ -644,33 +1690,33 @@ function renderStep4() {
       </div>
     </div>`);
 
-  // 이벤트
-  const chatInput = document.getElementById('chatInput');
-  const sendBtn = document.getElementById('sendBtn');
-  chatInput.oninput = () => {
-    state.userInput = chatInput.value;
-    sendBtn.disabled = !chatInput.value.trim() || state.isChatFinished || state.isTyping;
-  };
-  chatInput.onkeydown = (e) => {
-    if (e.isComposing) return;
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-  };
-  sendBtn.onclick = sendMessage;
+      // 이벤트
+      const chatInput = document.getElementById('chatInput');
+      const sendBtn = document.getElementById('sendBtn');
+      chatInput.oninput = () => {
+        state.userInput = chatInput.value;
+        sendBtn.disabled = !chatInput.value.trim() || state.isChatFinished || state.isTyping;
+      };
+      chatInput.onkeydown = (e) => {
+        if (e.isComposing) return;
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+      };
+      sendBtn.onclick = sendMessage;
 
-  const goBtn = document.getElementById('goStep5');
-  if (goBtn) goBtn.onclick = () => setState({ step: 5 });
+      const goBtn = document.getElementById('goStep5');
+      if (goBtn) goBtn.onclick = () => setState({ step: 5 });
 
-  scrollChat();
-}
+      scrollChat();
+    }
 
-// ====== Step 5: 마지막 성찰 ======
-function renderStep5() {
-  const v = state.selectedValue;
-  const prompt = state.mode === 'LOW'
-    ? `평소 너에게 중요하지 않았던 이 가치관(${v.name})${josa(v.name, '을/를')} 삶에 들이게 된다면, 앞으로 어떤 일들이 펼쳐질까?`
-    : `너에게 너무나도 중요했던 이 가치관(${v.name})${josa(v.name, '을/를')} 조금만 내려놓는다면, 너에게 어떤 여유나 변화가 생길까?`;
+    // ====== Step 5: 마지막 성찰 ======
+    function renderStep5() {
+      const v = state.selectedValue;
+      const prompt = state.mode === 'LOW'
+        ? `평소 너에게 중요하지 않았던 이 가치관(${v.name})${josa(v.name, '을/를')} 삶에 들이게 된다면, 앞으로 어떤 일들이 펼쳐질까?`
+        : `너에게 너무나도 중요했던 이 가치관(${v.name})${josa(v.name, '을/를')} 조금만 내려놓는다면, 너에게 어떤 여유나 변화가 생길까?`;
 
-  appShell(`
+      appShell(`
     <div class="input-step">
       <div class="input-card slide-up">
         <h2>마지막으로 생각을 정리해볼까?</h2>
@@ -680,47 +1726,47 @@ function renderStep5() {
       </div>
     </div>`);
 
-  const input = document.getElementById('reflInput');
-  const btn = document.getElementById('reflSubmit');
-  input.oninput = () => { state.finalReflection = input.value; btn.disabled = !input.value.trim(); };
-  btn.disabled = !state.finalReflection.trim();
-  btn.onclick = () => {
-    if (!state.finalReflection.trim()) return;
-    setState({ step: 6, isGeneratingSummary: true });
-    generateSummary();
-  };
-}
+      const input = document.getElementById('reflInput');
+      const btn = document.getElementById('reflSubmit');
+      input.oninput = () => { state.finalReflection = input.value; btn.disabled = !input.value.trim(); };
+      btn.disabled = !state.finalReflection.trim();
+      btn.onclick = () => {
+        if (!state.finalReflection.trim()) return;
+        setState({ step: 6, isGeneratingSummary: true });
+        generateSummary();
+      };
+    }
 
-// ====== Step 6: 총평 ======
-async function generateSummary() {
-  try {
-    const chatLog = state.chatHistory.map(m => `${m.role === 'user' ? '학생' : '멘토'}: ${m.text}`).join('\n');
-    const data = await apiCall({
-      type: 'summary',
-      mode: state.mode,
-      valueName: state.selectedValue.name,
-      userDefinition: state.userDefinition,
-      threeAnswers: state.threeAnswers,
-      chatLog,
-      finalReflection: state.finalReflection,
-    });
-    state.finalSummary = data.text;
-  } catch (e) {
-    state.finalSummary = '네트워크 오류로 총평을 불러오지 못했습니다. 다시 시도해주세요.';
-  }
-  state.isGeneratingSummary = false;
-  render();
-}
+    // ====== Step 6: 총평 ======
+    async function generateSummary() {
+      try {
+        const chatLog = state.chatHistory.map(m => `${m.role === 'user' ? '학생' : '멘토'}: ${m.text}`).join('\n');
+        const data = await apiCall({
+          type: 'summary',
+          mode: state.mode,
+          valueName: state.selectedValue.name,
+          userDefinition: state.userDefinition,
+          threeAnswers: state.threeAnswers,
+          chatLog,
+          finalReflection: state.finalReflection,
+        });
+        state.finalSummary = data.text;
+      } catch (e) {
+        state.finalSummary = '네트워크 오류로 총평을 불러오지 못했습니다. 다시 시도해주세요.';
+      }
+      state.isGeneratingSummary = false;
+      render();
+    }
 
-function renderStep6() {
-  const v = state.selectedValue;
+    function renderStep6() {
+      const v = state.selectedValue;
 
-  if (state.isGeneratingSummary) {
-    appShell(`<div class="loading-screen"><div class="spinner"></div><p>너만의 철학이 담긴 총평을 작성하고 있어...</p></div>`, { hideHeader: true });
-    return;
-  }
+      if (state.isGeneratingSummary) {
+        appShell(`<div class="loading-screen"><div class="spinner"></div><p>너만의 철학이 담긴 총평을 작성하고 있어...</p></div>`, { hideHeader: true });
+        return;
+      }
 
-  appShell(`
+      appShell(`
     <div class="summary-step">
       <div class="summary-nav">
         <button class="back-btn2" id="sumBack">${ICONS.arrowLeft}</button>
@@ -742,30 +1788,31 @@ function renderStep6() {
       <button class="download-btn" id="downloadBtn">${ICONS.download} 이미지로 저장하기</button>
     </div>`, { hideHeader: true });
 
-  document.getElementById('sumBack').onclick = () => setState({ step: 5 });
-  document.getElementById('sumReset').onclick = resetApp;
-  document.getElementById('downloadBtn').onclick = handleDownload;
-}
+      document.getElementById('sumBack').onclick = () => setState({ step: 5 });
+      document.getElementById('sumReset').onclick = resetApp;
+      document.getElementById('downloadBtn').onclick = handleDownload;
+    }
 
-async function handleDownload() {
-  const el = document.getElementById('summaryCapture');
-  if (!el || !window.html2canvas) return;
-  try {
-    const canvas = await html2canvas(el, {
-      scale: 2, backgroundColor: '#ffffff', useCORS: true, allowTaint: true,
-      windowHeight: el.scrollHeight,
-    });
-    const link = document.createElement('a');
-    link.download = `가치관상담소_총평_${state.selectedValue.name}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-  } catch (e) {
-    alert('이미지 저장에 실패했습니다. 다시 시도해주세요.');
-  }
-}
+    async function handleDownload() {
+      const el = document.getElementById('summaryCapture');
+      if (!el || !window.html2canvas) return;
+      try {
+        const canvas = await html2canvas(el, {
+          scale: 2, backgroundColor: '#ffffff', useCORS: true, allowTaint: true,
+          windowHeight: el.scrollHeight,
+        });
+        const link = document.createElement('a');
+        link.download = `가치관상담소_총평_${state.selectedValue.name}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      } catch (e) {
+        alert('이미지 저장에 실패했습니다. 다시 시도해주세요.');
+      }
+    }
 
-// --- 초기 렌더 ---
-render();
-</script>
+    // --- 초기 렌더 ---
+    render();
+  </script>
 </body>
+
 </html>
